@@ -1,14 +1,30 @@
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 
-export async function convertAndSanitize(markdown: string) {
-  // Convert markdown to HTML
+export async function markdownToSafeEmailHtml(markdown: string) {
   const rawHtml = await marked(markdown);
 
-  // Sanitize HTML
   const cleanHtml = DOMPurify.sanitize(rawHtml, {
-    USE_PROFILES: { html: true },
+    ALLOWED_TAGS: [
+      "p",
+      "br",
+      "strong",
+      "em",
+      "b",
+      "i",
+      "ul",
+      "ol",
+      "li",
+      "h1",
+      "h2",
+      "h3",
+    ],
+    ALLOWED_ATTR: [],
   });
 
-  return cleanHtml;
+  return `
+    <div style="font-family: Arial, sans-serif; font-size: 14px; line-height: 1.6;">
+      ${cleanHtml}
+    </div>
+  `;
 }

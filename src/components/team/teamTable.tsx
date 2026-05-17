@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { TeamMember } from "../../types/team.types";
 import { FeedbackModal, type FeedbackFormData } from "./FeedbackModal";
-import { marked } from "marked";
+import { markdownToSafeEmailHtml } from "../../utils/sanitizeHtml";
 
 interface Props {
   members: TeamMember[];
@@ -12,12 +12,10 @@ export const TeamTable = ({ members }: Props) => {
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  const handleSubmitFeedback = (data: FeedbackFormData) => {
-    const emailHtml = `
-      <div style="font-family: Arial, sans-serif; font-size: 14px;">
-        ${marked(data.comment)}
-      </div>`;
-    console.log("Feedback submitted ", emailHtml);
+  const handleSubmitFeedback = async (data: FeedbackFormData) => {
+    const cleanedComment = await markdownToSafeEmailHtml(data.comment);
+
+    console.log("Feedback submitted ", cleanedComment);
     console.log("For member ", selectedMember);
     setToastMessage("Feedback submitted successfully!");
 
