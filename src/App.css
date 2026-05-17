@@ -167,7 +167,7 @@
 
   &::before,
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     top: -4.5px;
     border: 5px solid transparent;
@@ -180,5 +180,17 @@
   &::after {
     right: 0;
     border-right-color: var(--border);
+  }
+  .s0 {
+    fill: url(#g1);
+  }
+  .s1 {
+    fill: url(#g2);
+  }
+  .s2 {
+    fill: url(#g3);
+  }
+  .s3 {
+    fill: url(#g4);
   }
 }

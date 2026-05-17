@@ -70,17 +70,6 @@ const Sidebar = () => {
               </NavLink>
             </li>
             <li>
-              <NavLink to="/settings">
-                <button
-                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                  data-tip="Settings"
-                >
-                  <SettingsIcon />
-                  <span className="is-drawer-close:hidden"> Settings</span>
-                </button>
-              </NavLink>
-            </li>
-            <li>
               <NavLink to="/calendar">
                 <button
                   className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
@@ -99,6 +88,17 @@ const Sidebar = () => {
                 >
                   <TeamIcon />
                   <span className="is-drawer-close:hidden"> Team</span>
+                </button>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/settings">
+                <button
+                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                  data-tip="Settings"
+                >
+                  <SettingsIcon />
+                  <span className="is-drawer-close:hidden"> Settings</span>
                 </button>
               </NavLink>
             </li>
