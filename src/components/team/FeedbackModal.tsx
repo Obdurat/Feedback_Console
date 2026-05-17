@@ -1,5 +1,6 @@
 import type { TeamMember } from "../../types/team.types";
 import { useState } from "react";
+import MDEditor from "@uiw/react-md-editor";
 
 interface Props {
   member: TeamMember | null;
@@ -87,13 +88,13 @@ export const FeedbackModal = ({ member, isOpen, onClose, onSubmit }: Props) => {
             <label className="label pr-2">
               <span className="label-text">Comments</span>
             </label>
-            <textarea
-              className="textarea textarea-bordered"
-              rows={4}
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              placeholder="Write your feedback..."
-            />
+            <div data-color-mode="dark">
+              <MDEditor
+                value={comment}
+                onChange={(val) => setComment(val || "")}
+                height={200}
+              />
+            </div>
           </div>
         </div>
         {/* Actions */}
