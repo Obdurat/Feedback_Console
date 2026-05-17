@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { TeamMember } from "../../types/team.types";
 import { FeedbackModal, type FeedbackFormData } from "./FeedbackModal";
+import { marked } from "marked";
 
 interface Props {
   members: TeamMember[];
@@ -12,7 +13,12 @@ export const TeamTable = ({ members }: Props) => {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const handleSubmitFeedback = (data: FeedbackFormData) => {
-    console.log("Feedback submitted ", data);
+    const emailHtml = `
+  <div style="font-family: Arial, sans-serif; font-size: 14px;">
+    ${marked(data.comment)}
+  </div>
+`;
+    console.log("Feedback submitted ", emailHtml);
     console.log("For member ", selectedMember);
     setToastMessage("Feedback submitted successfully!");
 
