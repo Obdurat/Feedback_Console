@@ -14,10 +14,9 @@ export const TeamTable = ({ members }: Props) => {
 
   const handleSubmitFeedback = (data: FeedbackFormData) => {
     const emailHtml = `
-  <div style="font-family: Arial, sans-serif; font-size: 14px;">
-    ${marked(data.comment)}
-  </div>
-`;
+      <div style="font-family: Arial, sans-serif; font-size: 14px;">
+        ${marked(data.comment)}
+      </div>`;
     console.log("Feedback submitted ", emailHtml);
     console.log("For member ", selectedMember);
     setToastMessage("Feedback submitted successfully!");
