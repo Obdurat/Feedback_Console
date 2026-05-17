@@ -15,6 +15,8 @@ const ShiftCalendar = ({ shifts }: Props) => {
   const daysInMonth = endOfMonth.date();
   const startDay = startOfMonth.day(); // 0 (Sun) - 6 (Sat)
 
+  const weekdayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
   const shiftMap = useMemo(() => {
     const map = new Map<string, ShiftDay["status"]>();
     shifts?.forEach((s) =>
@@ -113,7 +115,7 @@ const ShiftCalendar = ({ shifts }: Props) => {
 
       {/* Weekdays */}
       <div className="grid grid-cols-7 gap-2 text-center font-medium mb-2">
-        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
+        {weekdayLabels.map((d) => (
           <div key={d}>{d}</div>
         ))}
       </div>
