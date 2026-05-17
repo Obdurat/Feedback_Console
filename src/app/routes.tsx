@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Sidebar from "../components/layout/Sidebar";
 import Shifts from "../pages/Shifts";
 import App from "./App";
+import { Teams } from "../pages/Teams";
 // import Dashboard from "../pages/Dashboard";
 // import Shifts from "../pages/Shifts";
 // import Feedback from "../pages/Feedback";
@@ -15,6 +16,7 @@ export const AppRoutes = () => {
         <Route element={<Sidebar />}>
           <Route path="/" element={<App />} />
           <Route path="/calendar" element={<Shifts />} />
+          <Route path="/teams" element={<Teams />} />
           {/* <Route path="/" element={<Dashboard />} />
           <Route path="/shifts" element={<Shifts />} />
           <Route path="/feedback" element={<Feedback />} />
