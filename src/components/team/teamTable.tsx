@@ -118,12 +118,12 @@ export const TeamTable = ({ members }: Props) => {
                       Feedbacks
                       <div
                         className={`badge ${
-                          member.feedbacks?.length
+                          member.receivedFeedbacks?.length
                             ? "badge-primary"
                             : "badge-ghost"
                         }`}
                       >
-                        {member.feedbacks?.length ?? 0}
+                        {member.receivedFeedbacks?.length ?? 0}
                       </div>
                     </button>
 
@@ -148,8 +148,9 @@ export const TeamTable = ({ members }: Props) => {
                       ${openDropdownId === member.id ? "block" : "hidden"}
                     `}
                     >
-                      {member.feedbacks && member.feedbacks.length > 0 ? (
-                        member.feedbacks.map((fb) => (
+                      {member.receivedFeedbacks &&
+                      member.receivedFeedbacks.length > 0 ? (
+                        member.receivedFeedbacks.map((fb) => (
                           <li key={fb.id}>
                             <button
                               onClick={() => {
@@ -186,6 +187,10 @@ export const TeamTable = ({ members }: Props) => {
 
                               <div className="mt-2 text-sm font-medium">
                                 {fb.category}
+                                <span className="text-xs opacity-60">
+                                  {" "}
+                                  - {fb.submittedBy.name}
+                                </span>
                               </div>
                             </button>
                           </li>
@@ -222,10 +227,10 @@ export const TeamTable = ({ members }: Props) => {
                 <td>{member.wave}</td>
 
                 <td>
-                  CS Agent
+                  Bolt OPS
                   <br />
                   <span className="badge badge-ghost badge-sm bg-base-300">
-                    {member.position}
+                    {member.role.name}
                   </span>
                 </td>
 

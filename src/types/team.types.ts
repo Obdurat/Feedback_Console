@@ -1,22 +1,49 @@
-export type FeedbackEntry = {
+export type FeedbackType = "POSITIVE" | "IMPROVEMENT";
+
+export interface Role {
   id: string;
-  memberId: string; // ID of the team member receiving feedback
-  createdAt: string; // ISO format: 2026-05-16T14:30:00Z
-  comment: string; // Markdown formatted comment
-  type: "POSITIVE" | "IMPROVEMENT";
-  category: string; // E.g., "Communication", "Technical Skills", etc.
-};
+
+  name: string;
+}
+
+export interface SimpleTeamMember {
+  id: string;
+
+  name: string;
+}
+
+export interface FeedbackEntry {
+  id: string;
+
+  memberId: string;
+
+  createdAt: string;
+
+  comment: string;
+
+  type: FeedbackType;
+
+  category: string;
+
+  submittedBy: SimpleTeamMember;
+}
 
 export interface TeamMember {
   id: string;
+
   name: string;
-  position: string;
+
   status: "Active" | "Inactive";
-  hiringDate: string; // ISO format: 2026-05-16
-  wave: number; // For sorting by seniority
-  teamLead: string; // Name of the team lead
-  teamManager: string; // Name of the team manager
-  manager: string; // Name of the manager
-  director: string; // Name of the director
-  feedbacks: FeedbackEntry[] | null; // Array of feedback entries
+
+  hiringDate: string;
+
+  wave: number;
+
+  createdAt: string;
+
+  role: Role;
+
+  reportsTo: SimpleTeamMember | null;
+
+  receivedFeedbacks: FeedbackEntry[];
 }

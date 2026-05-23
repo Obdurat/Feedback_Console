@@ -31,6 +31,8 @@ export const FeedbackPreviewModal = ({ feedback, isOpen, onClose }: Props) => {
 
             <div className="mt-2 text-sm opacity-70">
               {new Date(feedback.createdAt).toLocaleString()}
+              {" - "}
+              Submitted by: {feedback.submittedBy.name}
             </div>
           </div>
 
