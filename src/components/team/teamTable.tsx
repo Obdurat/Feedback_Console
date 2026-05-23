@@ -1,7 +1,8 @@
 import { useState } from "react";
-import type { TeamMember } from "../../types/team.types";
+import type { FeedbackEntry, TeamMember } from "../../types/team.types";
 import { FeedbackModal, type FeedbackFormData } from "./FeedbackModal";
 import { markdownToSafeEmailHtml } from "../../utils/sanitizeHtml";
+import { FeedbackPreviewModal } from "./FeedbackPreviewModal";
 
 interface Props {
   members: TeamMember[];
@@ -11,6 +12,9 @@ export const TeamTable = ({ members }: Props) => {
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const [selectedFeedback, setSelectedFeedback] =
+    useState<FeedbackEntry | null>(null);
 
   const handleSubmitFeedback = async (data: FeedbackFormData) => {
     const cleanedComment = await markdownToSafeEmailHtml(data.comment);
@@ -64,7 +68,10 @@ export const TeamTable = ({ members }: Props) => {
                       {member.feedbacks && member.feedbacks.length > 0 ? (
                         member.feedbacks.map((fb) => (
                           <li key={fb.id}>
-                            <a>
+                            <a
+                              onClick={() => setSelectedFeedback(fb)}
+                              className="flex flex-col items-start"
+                            >
                               <span
                                 className={
                                   fb.type === "POSITIVE"
@@ -139,6 +146,12 @@ export const TeamTable = ({ members }: Props) => {
         isOpen={!!selectedMember}
         onClose={() => setSelectedMember(null)}
         onSubmit={handleSubmitFeedback}
+      />
+
+      <FeedbackPreviewModal
+        feedback={selectedFeedback}
+        isOpen={!!selectedFeedback}
+        onClose={() => setSelectedFeedback(null)}
       />
 
       {toastMessage && (

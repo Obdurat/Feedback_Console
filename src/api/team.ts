@@ -15,6 +15,74 @@ const mockTeamMembers: TeamMember[] = [
     feedbacks: null,
   },
   {
+    id: "tm-001",
+
+    name: "John Carter",
+
+    position: "Customer Support Specialist",
+
+    status: "Active",
+
+    hiringDate: "2025-09-12",
+
+    wave: 3,
+
+    teamLead: "Anderson Rodrigues",
+
+    teamManager: "Sarah Johnson",
+
+    manager: "Michael Lee",
+
+    director: "Emma Wilson",
+
+    feedbacks: [
+      {
+        id: "fb-001",
+
+        date: "2026-05-23T14:32:00Z",
+
+        type: "IMPROVEMENT",
+
+        category: "Communication",
+
+        comment: `
+# Communication Improvement Feedback
+
+There are opportunities to improve incident communication and shift handoffs.
+
+## Main Points
+- Delayed escalation updates
+- Missing ownership confirmations
+- Incomplete ticket notes
+
+Please focus on proactive communication during high priority incidents.
+      `,
+      },
+
+      {
+        id: "fb-002",
+
+        date: "2026-05-15T09:10:00Z",
+
+        type: "POSITIVE",
+
+        category: "Performance",
+
+        comment: `# Excellent Sprint Performance
+You handled the backlog exceptionally well during the last sprint.
+
+## Highlights
+
+- Closed 34 tickets
+- Assisted new agents
+- Maintained SLA compliance above 98%
+
+Great job.
+`,
+      },
+    ],
+  },
+  {
     id: "2",
     name: "Michael Brown",
     position: "Junior Agent",

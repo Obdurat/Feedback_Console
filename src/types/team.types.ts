@@ -1,4 +1,4 @@
-type FeedbackEntry = {
+export type FeedbackEntry = {
   id: string;
   date: string; // ISO format: 2026-05-16T14:30:00Z
   comment: string; // Markdown formatted comment
