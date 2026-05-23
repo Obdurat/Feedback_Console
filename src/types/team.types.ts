@@ -17,5 +17,5 @@ export interface TeamMember {
   teamManager: string; // Name of the team manager
   manager: string; // Name of the manager
   director: string; // Name of the director
-  feedbacks: FeedbackEntry[]; // Array of feedback entries
+  feedbacks: FeedbackEntry[] | null; // Array of feedback entries
 }

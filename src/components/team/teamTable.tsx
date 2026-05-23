@@ -47,14 +47,33 @@ export const TeamTable = ({ members }: Props) => {
                   </div>
                   <ul
                     tabIndex={-1}
-                    className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+                    className="dropdown-content menu bg-base-100 rounded-box z-1 w-fill p-2 shadow-sm"
                   >
-                    <li>
-                      <a>Item 1</a>
-                    </li>
-                    <li>
-                      <a>Item 2</a>
-                    </li>
+                    {member.feedbacks && member.feedbacks.length > 0 ? (
+                      member.feedbacks.map((fb) => (
+                        <li key={fb.id}>
+                          <a>
+                            <span
+                              className={
+                                fb.type === "POSITIVE"
+                                  ? "text-success"
+                                  : "text-error"
+                              }
+                            >
+                              {fb.type}
+                            </span>
+                            <div className="text-sm opacity-70">
+                              {new Date(fb.date).toLocaleDateString()}
+                            </div>
+                            <div className="mt-1 text-sm">{fb.category}</div>
+                          </a>
+                        </li>
+                      ))
+                    ) : (
+                      <li>
+                        <a>No feedbacks yet</a>
+                      </li>
+                    )}
                   </ul>
                 </div>
                 <td>

@@ -12,6 +12,7 @@ const mockTeamMembers: TeamMember[] = [
     teamManager: "Carol Davis",
     manager: "David Wilson",
     director: "Eve Thompson",
+    feedbacks: null,
   },
   {
     id: "2",
@@ -24,6 +25,22 @@ const mockTeamMembers: TeamMember[] = [
     teamManager: "Carol Davis",
     manager: "David Wilson",
     director: "Eve Thompson",
+    feedbacks: [
+      {
+        id: "feedback1",
+        date: "2023-10-15T14:30:00Z",
+        comment: "Great work on the recent project!",
+        type: "POSITIVE",
+        category: "Technical Skills",
+      },
+      {
+        id: "feedback2",
+        date: "2023-11-01T10:00:00Z",
+        comment: "Needs improvement in communication.",
+        type: "IMPROVEMENT",
+        category: "Communication",
+      },
+    ],
   },
   {
     id: "3",
@@ -36,6 +53,7 @@ const mockTeamMembers: TeamMember[] = [
     teamManager: "Carol Davis",
     manager: "David Wilson",
     director: "Eve Thompson",
+    feedbacks: null,
   },
 ];
 
