@@ -47,7 +47,7 @@ export const TeamTable = ({ members }: Props) => {
                   </div>
                   <ul
                     tabIndex={-1}
-                    className="dropdown-content menu bg-base-100 rounded-box z-1 w-fill p-2 shadow-sm"
+                    className="dropdown-content menu bg-base-300 rounded-box z-1 w-fill p-2 shadow-sm"
                   >
                     {member.feedbacks && member.feedbacks.length > 0 ? (
                       member.feedbacks.map((fb) => (
