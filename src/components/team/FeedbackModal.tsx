@@ -6,7 +6,9 @@ interface Props {
   member: TeamMember | null;
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: FeedbackFormData) => void;
+  onSubmit: (data: FeedbackFormData) => Promise<void>;
+
+  isSubmitting: boolean;
 }
 
 export interface FeedbackFormData {
@@ -15,19 +17,35 @@ export interface FeedbackFormData {
   comment: string;
 }
 
-export const FeedbackModal = ({ member, isOpen, onClose, onSubmit }: Props) => {
+export const FeedbackModal = ({
+  member,
+  isOpen,
+  onClose,
+  onSubmit,
+  isSubmitting,
+}: Props) => {
   const [type, setType] = useState<"POSITIVE" | "IMPROVEMENT">("POSITIVE");
   const [category, setCategory] = useState("");
   const [comment, setComment] = useState("");
 
   if (!isOpen || !member) return null;
 
-  const handleSubmit = () => {
-    onSubmit({ type, category, comment });
-    onClose();
-    setCategory("");
-    setComment("");
-    setType("POSITIVE");
+  const handleSubmit = async () => {
+    try {
+      await onSubmit({
+        type,
+        category,
+        comment,
+      });
+
+      onClose();
+
+      setCategory("");
+      setComment("");
+      setType("POSITIVE");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -107,9 +125,16 @@ export const FeedbackModal = ({ member, isOpen, onClose, onSubmit }: Props) => {
               type === "POSITIVE" ? "btn-success" : "btn-error"
             }`}
             onClick={handleSubmit}
-            disabled={!category || !comment}
+            disabled={!category || !comment || isSubmitting}
           >
-            Submit
+            {isSubmitting ? (
+              <>
+                <span className="loading loading-spinner loading-sm" />
+                Sending...
+              </>
+            ) : (
+              "Submit"
+            )}
           </button>
         </div>
       </div>

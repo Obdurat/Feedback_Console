@@ -1,8 +1,8 @@
 import { useState } from "react";
 import type { FeedbackEntry, TeamMember } from "../../types/team.types";
 import { FeedbackModal, type FeedbackFormData } from "./FeedbackModal";
-import { markdownToSafeEmailHtml } from "../../utils/sanitizeHtml";
 import { FeedbackPreviewModal } from "./FeedbackPreviewModal";
+import { useCreateFeedback } from "../../hooks/useCreateFeedback";
 
 interface Props {
   members: TeamMember[];
@@ -11,20 +11,47 @@ interface Props {
 export const TeamTable = ({ members }: Props) => {
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
 
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [toast, setToast] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
 
   const [selectedFeedback, setSelectedFeedback] =
     useState<FeedbackEntry | null>(null);
 
-  const handleSubmitFeedback = async (data: FeedbackFormData) => {
-    const cleanedComment = await markdownToSafeEmailHtml(data.comment);
+  const createFeedbackMutation = useCreateFeedback();
 
-    console.log("Feedback submitted ", cleanedComment);
-    console.log("For member ", selectedMember);
-    setToastMessage("Feedback submitted successfully!");
+  const handleSubmitFeedback = async (data: FeedbackFormData) => {
+    if (!selectedMember) return;
+
+    try {
+      await createFeedbackMutation.mutateAsync({
+        memberId: selectedMember.id,
+
+        feedback: {
+          type: data.type,
+
+          category: data.category,
+
+          comment: data.comment,
+        },
+      });
+
+      setToast({
+        message: "Feedback submitted successfully!",
+        type: "success",
+      });
+    } catch (error) {
+      console.error(error);
+
+      setToast({
+        message: "Failed to submit feedback, Try again later.",
+        type: "error",
+      });
+    }
 
     setTimeout(() => {
-      setToastMessage(null);
+      setToast(null);
     }, 3000);
   };
 
@@ -146,6 +173,7 @@ export const TeamTable = ({ members }: Props) => {
         isOpen={!!selectedMember}
         onClose={() => setSelectedMember(null)}
         onSubmit={handleSubmitFeedback}
+        isSubmitting={createFeedbackMutation.isPending}
       />
 
       <FeedbackPreviewModal
@@ -154,10 +182,14 @@ export const TeamTable = ({ members }: Props) => {
         onClose={() => setSelectedFeedback(null)}
       />
 
-      {toastMessage && (
+      {toast && (
         <div className="toast toast-end">
-          <div className="alert alert-success shadow-lg">
-            <span>{toastMessage}</span>
+          <div
+            className={`alert shadow-lg ${
+              toast.type === "success" ? "alert-success" : "alert-error"
+            }`}
+          >
+            <span>{toast.message}</span>
           </div>
         </div>
       )}
