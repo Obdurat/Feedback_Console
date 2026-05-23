@@ -1,6 +1,7 @@
 export type FeedbackEntry = {
   id: string;
-  date: string; // ISO format: 2026-05-16T14:30:00Z
+  memberId: string; // ID of the team member receiving feedback
+  createdAt: string; // ISO format: 2026-05-16T14:30:00Z
   comment: string; // Markdown formatted comment
   type: "POSITIVE" | "IMPROVEMENT";
   category: string; // E.g., "Communication", "Technical Skills", etc.

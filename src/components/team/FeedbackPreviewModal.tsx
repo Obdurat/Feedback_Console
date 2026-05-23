@@ -30,7 +30,7 @@ export const FeedbackPreviewModal = ({ feedback, isOpen, onClose }: Props) => {
             </div>
 
             <div className="mt-2 text-sm opacity-70">
-              {new Date(feedback.date).toLocaleString()}
+              {new Date(feedback.createdAt).toLocaleString()}
             </div>
           </div>
 

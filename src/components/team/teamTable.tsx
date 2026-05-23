@@ -109,7 +109,7 @@ export const TeamTable = ({ members }: Props) => {
                                 {fb.type}
                               </span>
                               <div className="text-sm opacity-70">
-                                {new Date(fb.date).toLocaleDateString()}
+                                {new Date(fb.createdAt).toLocaleDateString()}
                               </div>
                               <div className="mt-1 text-sm">{fb.category}</div>
                             </a>
