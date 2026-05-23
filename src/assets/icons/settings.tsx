@@ -7,7 +7,7 @@ export const SettingsIcon = () => (
     strokeWidth="2"
     fill="none"
     stroke="currentColor"
-    className="my-1.5 inline-block size-4"
+    className="my-1.5 inline-block size-6"
   >
     <path d="M20 7h-9"></path>
     <path d="M14 17H5"></path>

@@ -3,7 +3,7 @@ export const TeamIcon = () => (
     viewBox="0 0 24 24"
     fill="currentColor"
     xmlns="http://www.w3.org/2000/svg"
-    className="my-1.5 inline-block size-4"
+    className="my-1.5 inline-block size-6"
   >
     <circle cx="7" cy="8" r="3" opacity="0.6" />
     <path d="M2 18c0-3 2.5-5 5-5s5 2 5 5v1H2v-1z" opacity="0.6" />

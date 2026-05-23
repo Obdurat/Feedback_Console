@@ -3,7 +3,7 @@ export const CalendarIcon = () => (
     viewBox="0 0 24 24"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className="my-1.5 inline-block size-4"
+    className="my-1.5 inline-block size-6"
   >
     {/* Calendar body */}
     <rect
