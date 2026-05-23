@@ -30,6 +30,7 @@ export const TeamTable = ({ members }: Props) => {
         <table className="table">
           <thead>
             <tr>
+              <th></th>
               <th>Name</th>
               <th>Wave</th>
               <th>Position</th>
@@ -40,6 +41,22 @@ export const TeamTable = ({ members }: Props) => {
           <tbody>
             {members.map((member) => (
               <tr key={member.id}>
+                <div className="dropdown dropdown-right dropdown-center">
+                  <div tabIndex={0} role="button" className="btn m-1">
+                    Previous Feedbacks
+                  </div>
+                  <ul
+                    tabIndex={-1}
+                    className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+                  >
+                    <li>
+                      <a>Item 1</a>
+                    </li>
+                    <li>
+                      <a>Item 2</a>
+                    </li>
+                  </ul>
+                </div>
                 <td>
                   <div className="flex items-center gap-3">
                     <div className="avatar">
@@ -62,6 +79,8 @@ export const TeamTable = ({ members }: Props) => {
                 <td>{member.wave}</td>
 
                 <td>
+                  CS Agent
+                  <br />
                   <span className="badge badge-ghost badge-sm">
                     {member.position}
                   </span>
@@ -72,7 +91,7 @@ export const TeamTable = ({ members }: Props) => {
                     className="btn btn-primary btn-sm"
                     onClick={() => setSelectedMember(member)}
                   >
-                    Give Feedback
+                    New Feedback
                   </button>
                 </td>
               </tr>
