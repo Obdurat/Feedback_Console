@@ -41,41 +41,54 @@ export const TeamTable = ({ members }: Props) => {
           <tbody>
             {members.map((member) => (
               <tr key={member.id}>
-                <div className="dropdown dropdown-right dropdown-center">
-                  <div tabIndex={0} role="button" className="btn m-1">
-                    Previous Feedbacks
-                  </div>
-                  <ul
-                    tabIndex={-1}
-                    className="dropdown-content menu bg-base-300 rounded-box z-1 w-fill p-2 shadow-sm"
-                  >
-                    {member.feedbacks && member.feedbacks.length > 0 ? (
-                      member.feedbacks.map((fb) => (
-                        <li key={fb.id}>
-                          <a>
-                            <span
-                              className={
-                                fb.type === "POSITIVE"
-                                  ? "text-success"
-                                  : "text-error"
-                              }
-                            >
-                              {fb.type}
-                            </span>
-                            <div className="text-sm opacity-70">
-                              {new Date(fb.date).toLocaleDateString()}
-                            </div>
-                            <div className="mt-1 text-sm">{fb.category}</div>
-                          </a>
+                <td>
+                  <div className="dropdown dropdown-right dropdown-center">
+                    <div tabIndex={0} role="button">
+                      <button className="btn btn-ghost btn-sm">
+                        Feedbacks
+                        <div
+                          className={`badge ${
+                            member.feedbacks?.length
+                              ? "badge-primary"
+                              : "badge-ghost"
+                          }`}
+                        >
+                          {member.feedbacks?.length ?? 0}
+                        </div>
+                      </button>
+                    </div>
+                    <ul
+                      tabIndex={-1}
+                      className="dropdown-content menu bg-base-300 rounded-box z-1 w-fill p-2 shadow-sm"
+                    >
+                      {member.feedbacks && member.feedbacks.length > 0 ? (
+                        member.feedbacks.map((fb) => (
+                          <li key={fb.id}>
+                            <a>
+                              <span
+                                className={
+                                  fb.type === "POSITIVE"
+                                    ? "text-success"
+                                    : "text-error"
+                                }
+                              >
+                                {fb.type}
+                              </span>
+                              <div className="text-sm opacity-70">
+                                {new Date(fb.date).toLocaleDateString()}
+                              </div>
+                              <div className="mt-1 text-sm">{fb.category}</div>
+                            </a>
+                          </li>
+                        ))
+                      ) : (
+                        <li>
+                          <a>No feedbacks yet</a>
                         </li>
-                      ))
-                    ) : (
-                      <li>
-                        <a>No feedbacks yet</a>
-                      </li>
-                    )}
-                  </ul>
-                </div>
+                      )}
+                    </ul>
+                  </div>
+                </td>
                 <td>
                   <div className="flex items-center gap-3">
                     <div className="avatar">
