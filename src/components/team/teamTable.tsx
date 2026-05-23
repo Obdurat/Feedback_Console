@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { FeedbackEntry, TeamMember } from "../../types/team.types";
 import { FeedbackModal, type FeedbackFormData } from "./FeedbackModal";
 import { FeedbackPreviewModal } from "./FeedbackPreviewModal";
@@ -9,7 +9,11 @@ interface Props {
 }
 
 export const TeamTable = ({ members }: Props) => {
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
+
+  const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
 
   const [toast, setToast] = useState<{
     message: string;
@@ -28,36 +32,65 @@ export const TeamTable = ({ members }: Props) => {
       await createFeedbackMutation.mutateAsync({
         memberId: selectedMember.id,
 
-        feedback: {
-          type: data.type,
+        type: data.type,
 
-          category: data.category,
+        category: data.category,
 
-          comment: data.comment,
-        },
+        comment: data.comment,
       });
 
       setToast({
         message: "Feedback submitted successfully!",
         type: "success",
       });
-    } catch (error) {
-      console.error(error);
 
+      setSelectedMember(null);
+
+      setTimeout(() => {
+        setToast(null);
+      }, 3000);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
       setToast({
-        message: "Failed to submit feedback, Try again later.",
+        message: "Failed to submit feedback. Please try again.",
         type: "error",
       });
-    }
 
-    setTimeout(() => {
-      setToast(null);
-    }, 3000);
+      setTimeout(() => {
+        setToast(null);
+      }, 3000);
+    }
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setOpenDropdownId(null);
+      }
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpenDropdownId(null);
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, []);
 
   return (
     <>
-      <div className="overflow-x-auto">
+      <div className="">
         <table className="table">
           <thead>
             <tr>
@@ -73,51 +106,98 @@ export const TeamTable = ({ members }: Props) => {
             {members.map((member) => (
               <tr key={member.id}>
                 <td>
-                  <div className="dropdown dropdown-right dropdown-center">
-                    <div tabIndex={0} role="button">
-                      <button className="btn btn-ghost btn-sm">
-                        Feedbacks
-                        <div
-                          className={`badge ${
-                            member.feedbacks?.length
-                              ? "badge-primary"
-                              : "badge-ghost"
-                          }`}
-                        >
-                          {member.feedbacks?.length ?? 0}
-                        </div>
-                      </button>
-                    </div>
+                  <div
+                    ref={dropdownRef}
+                    className={`dropdown dropdown-right relative ${
+                      openDropdownId === member.id ? "dropdown-open" : ""
+                    }`}
+                  >
+                    <button
+                      role="button"
+                      className="btn btn-ghost btn-sm"
+                      onClick={() =>
+                        setOpenDropdownId((prev) =>
+                          prev === member.id ? null : member.id,
+                        )
+                      }
+                    >
+                      Feedbacks
+                      <div
+                        className={`badge ${
+                          member.feedbacks?.length
+                            ? "badge-primary"
+                            : "badge-ghost"
+                        }`}
+                      >
+                        {member.feedbacks?.length ?? 0}
+                      </div>
+                    </button>
+
                     <ul
-                      tabIndex={-1}
-                      className="dropdown-content menu bg-base-300 rounded-box z-1 w-fill p-2 shadow-sm"
+                      className={`
+                      dropdown-content
+                      z-[1]
+                      mt-2
+                      w-80
+                      max-h-96
+                      overflow-y-auto
+                      rounded-box
+                      border
+                      border-base-100
+                      bg-base-300
+                      p-2
+                      shadow-xl
+                      flex
+                      flex-col
+                      gap-2
+                      ${openDropdownId === member.id ? "block" : "hidden"}
+                    `}
                     >
                       {member.feedbacks && member.feedbacks.length > 0 ? (
                         member.feedbacks.map((fb) => (
                           <li key={fb.id}>
-                            <a
-                              onClick={() => setSelectedFeedback(fb)}
-                              className="flex flex-col items-start"
+                            <button
+                              onClick={() => {
+                                setSelectedFeedback(fb);
+
+                                setOpenDropdownId(null);
+                              }}
+                              className="
+                                w-full
+                                rounded-lg
+                                bg-base-200
+                                px-3
+                                py-2
+                                text-left
+                                transition
+                                hover:bg-base-100
+                              "
                             >
-                              <span
-                                className={
-                                  fb.type === "POSITIVE"
-                                    ? "text-success"
-                                    : "text-error"
-                                }
-                              >
-                                {fb.type}
-                              </span>
-                              <div className="text-sm opacity-70">
-                                {new Date(fb.createdAt).toLocaleDateString()}
+                              <div className="flex items-center justify-between">
+                                <span
+                                  className={`badge ${
+                                    fb.type === "POSITIVE"
+                                      ? "badge-success"
+                                      : "badge-error"
+                                  }`}
+                                >
+                                  {fb.type}
+                                </span>
+
+                                <span className="text-xs opacity-60">
+                                  {new Date(fb.createdAt).toLocaleDateString()}
+                                </span>
                               </div>
-                              <div className="mt-1 text-sm">{fb.category}</div>
-                            </a>
+
+                              <div className="mt-2 text-sm font-medium">
+                                {fb.category}
+                              </div>
+                            </button>
                           </li>
                         ))
                       ) : (
-                        <li>
-                          <a>No feedbacks yet</a>
+                        <li className="p-4 text-center text-sm opacity-60">
+                          No feedbacks yet
                         </li>
                       )}
                     </ul>

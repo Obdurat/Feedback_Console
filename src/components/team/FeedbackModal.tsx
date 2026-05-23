@@ -7,7 +7,6 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: FeedbackFormData) => Promise<void>;
-
   isSubmitting: boolean;
 }
 
