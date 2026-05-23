@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import type { FeedbackEntry, TeamMember } from "../../types/team.types";
 import { FeedbackModal, type FeedbackFormData } from "./FeedbackModal";
 import { FeedbackPreviewModal } from "./FeedbackPreviewModal";
@@ -9,8 +9,6 @@ interface Props {
 }
 
 export const TeamTable = ({ members }: Props) => {
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
 
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
@@ -63,13 +61,8 @@ export const TeamTable = ({ members }: Props) => {
   };
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setOpenDropdownId(null);
-      }
+    const handleClickOutside = () => {
+      setOpenDropdownId(null);
     };
 
     const handleEscape = (event: KeyboardEvent) => {
@@ -78,12 +71,13 @@ export const TeamTable = ({ members }: Props) => {
       }
     };
 
+    document.addEventListener("click", handleClickOutside);
+
     document.addEventListener("keydown", handleEscape);
 
-    document.addEventListener("mousedown", handleClickOutside);
-
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("click", handleClickOutside);
+
       document.removeEventListener("keydown", handleEscape);
     };
   }, []);
@@ -107,7 +101,6 @@ export const TeamTable = ({ members }: Props) => {
               <tr key={member.id}>
                 <td>
                   <div
-                    ref={dropdownRef}
                     className={`dropdown dropdown-right relative ${
                       openDropdownId === member.id ? "dropdown-open" : ""
                     }`}
@@ -115,11 +108,12 @@ export const TeamTable = ({ members }: Props) => {
                     <button
                       role="button"
                       className="btn btn-ghost btn-sm"
-                      onClick={() =>
+                      onClick={(e) => {
+                        e.stopPropagation();
                         setOpenDropdownId((prev) =>
                           prev === member.id ? null : member.id,
-                        )
-                      }
+                        );
+                      }}
                     >
                       Feedbacks
                       <div
@@ -134,6 +128,7 @@ export const TeamTable = ({ members }: Props) => {
                     </button>
 
                     <ul
+                      onClick={(e) => e.stopPropagation()}
                       className={`
                       dropdown-content
                       z-[1]
