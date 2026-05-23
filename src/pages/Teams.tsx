@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export const Teams = () => {
   const { data, isLoading } = useQuery({
-    queryKey: ["team"],
+    queryKey: ["team-members"],
     queryFn: getTeamMembers,
   });
 

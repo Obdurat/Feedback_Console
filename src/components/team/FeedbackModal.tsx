@@ -14,6 +14,7 @@ export interface FeedbackFormData {
   type: "POSITIVE" | "IMPROVEMENT";
   category: string;
   comment: string;
+  submittedById: string;
 }
 
 export const FeedbackModal = ({
@@ -35,6 +36,7 @@ export const FeedbackModal = ({
         type,
         category,
         comment,
+        submittedById: "719658b6-6f7c-4710-9fed-41d98451abd6", // Replace with actual current user ID
       });
 
       onClose();

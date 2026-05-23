@@ -35,6 +35,8 @@ export const TeamTable = ({ members }: Props) => {
         category: data.category,
 
         comment: data.comment,
+
+        submittedById: data.submittedById, // Replace with actual current user ID
       });
 
       setToast({
