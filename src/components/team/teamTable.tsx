@@ -71,7 +71,9 @@ export const TeamTable = ({ members }: Props) => {
                     </div>
                     <div>
                       <div className="font-bold">{member.name}</div>
-                      <div className="text-sm opacity-50">{member.status}</div>
+                      <div className="text-sm opacity-50 bg-base-300">
+                        {member.status}
+                      </div>
                     </div>
                   </div>
                 </td>
@@ -81,7 +83,7 @@ export const TeamTable = ({ members }: Props) => {
                 <td>
                   CS Agent
                   <br />
-                  <span className="badge badge-ghost badge-sm">
+                  <span className="badge badge-ghost badge-sm bg-base-300">
                     {member.position}
                   </span>
                 </td>
