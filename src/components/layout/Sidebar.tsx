@@ -5,6 +5,9 @@ import { useAuth } from "../../auth/AuthProvider";
 const Sidebar = () => {
   const { user, logout } = useAuth();
 
+  const MANAGEMENT_ROLES = ["Director", "Manager", "Team Manager", "Team Lead"];
+  const isManagement = MANAGEMENT_ROLES.includes(user?.role?.name ?? "");
+
   return (
     <div className="drawer lg:drawer-open">
       <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
@@ -18,33 +21,35 @@ const Sidebar = () => {
           </div>
 
           {/* Nav Links */}
-          <div className="flex items-center gap-1">
+          {isManagement ? (
+            <>
+              <NavLink
+                to="/dashboard"
+                className={({ isActive }) =>
+                  `btn btn-sm btn-ghost ${isActive ? "btn-active" : ""}`
+                }
+              >
+                Dashboard
+              </NavLink>
+              <NavLink
+                to="/teams"
+                className={({ isActive }) =>
+                  `btn btn-sm btn-ghost ${isActive ? "btn-active" : ""}`
+                }
+              >
+                Teams
+              </NavLink>
+            </>
+          ) : (
             <NavLink
-              to="/"
+              to="/my-feedbacks"
               className={({ isActive }) =>
                 `btn btn-sm btn-ghost ${isActive ? "btn-active" : ""}`
               }
             >
-              Home
+              My Feedbacks
             </NavLink>
-            <NavLink
-              to="/dashboard"
-              className={({ isActive }) =>
-                `btn btn-sm btn-ghost ${isActive ? "btn-active" : ""}`
-              }
-            >
-              Dashboard
-            </NavLink>
-            <NavLink
-              to="/teams"
-              className={({ isActive }) =>
-                `btn btn-sm btn-ghost ${isActive ? "btn-active" : ""}`
-              }
-            >
-              Teams
-            </NavLink>
-          </div>
-
+          )}
           {/* Right Section */}
           <div className="ml-auto flex items-center gap-4">
             {user ? (

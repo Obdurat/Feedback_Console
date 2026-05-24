@@ -47,3 +47,13 @@ export interface TeamMember {
 
   receivedFeedbacks: FeedbackEntry[];
 }
+
+export interface MyFeedbacksResponse {
+  member: TeamMember;
+  stats: {
+    total: number;
+    positive: number;
+    improvement: number;
+    positiveRatio: number;
+  };
+}

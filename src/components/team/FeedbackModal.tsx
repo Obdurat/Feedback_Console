@@ -1,6 +1,7 @@
 import type { TeamMember } from "../../types/team.types";
 import { useState } from "react";
 import MDEditor from "@uiw/react-md-editor";
+import { useAuth } from "../../auth/AuthProvider";
 
 interface Props {
   member: TeamMember | null;
@@ -28,6 +29,8 @@ export const FeedbackModal = ({
   const [category, setCategory] = useState("");
   const [comment, setComment] = useState("");
 
+  const { user } = useAuth();
+
   if (!isOpen || !member) return null;
 
   const handleSubmit = async () => {
@@ -36,7 +39,7 @@ export const FeedbackModal = ({
         type,
         category,
         comment,
-        submittedById: "719658b6-6f7c-4710-9fed-41d98451abd6", // Replace with actual current user ID
+        submittedById: user!.id, // Replace with actual current user ID
       });
 
       onClose();
