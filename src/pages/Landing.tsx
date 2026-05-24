@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BoltLogo } from "../assets/icons/bolt";
-import { login } from "../api/authAPI";
+import { initLogin, verifyTotp } from "../api/authAPI";
 import { useAuth } from "../auth/AuthProvider";
+
+type Step = "employeeCode" | "qrSetup" | "totpCode";
 
 const features = [
   {
@@ -26,7 +28,7 @@ const features = [
   {
     icon: "🔒",
     title: "Secure Access",
-    description: "Enterprise-grade authentication via JWT.",
+    description: "Two-factor authentication via TOTP.",
   },
 ];
 
@@ -34,28 +36,177 @@ export const Landing = () => {
   const { login: setAuth } = useAuth();
   const navigate = useNavigate();
 
+  const [step, setStep] = useState<Step>("employeeCode");
   const [employeeCode, setEmployeeCode] = useState("");
-  const [password, setPassword] = useState("");
+  const [memberId, setMemberId] = useState("");
+  const [qrCode, setQrCode] = useState("");
+  const [code, setCode] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = async () => {
+  const handleInitLogin = async () => {
     setError("");
     setIsLoading(true);
     try {
-      const { token, user } = await login({ employeeCode, password });
-      setAuth(token, user);
-      navigate("/dashboard");
+      const result = await initLogin(employeeCode);
+      setMemberId(result.memberId);
+
+      if (result.firstLogin) {
+        setQrCode(result.qrCode);
+        setStep("qrSetup");
+      } else {
+        setStep("totpCode");
+      }
     } catch {
-      setError("Invalid employee code or password.");
+      setError("Employee code not found.");
     } finally {
       setIsLoading(false);
     }
   };
 
+  const handleVerify = async () => {
+    setError("");
+    setIsLoading(true);
+    try {
+      const { token, user } = await verifyTotp(memberId, code);
+      setAuth(token, user);
+      navigate("/dashboard");
+    } catch {
+      setError("Invalid or expired code. Try again.");
+      setCode("");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const renderCard = () => {
+    if (step === "employeeCode") {
+      return (
+        <>
+          <h2 className="font-bold text-lg">Sign in</h2>
+          <div className="flex flex-col gap-1">
+            <span className="text-xs opacity-50">Employee Code</span>
+            <input
+              type="text"
+              placeholder="EMP001"
+              className="input input-bordered input-sm"
+              value={employeeCode}
+              onChange={(e) => setEmployeeCode(e.target.value.toUpperCase())}
+              onKeyDown={(e) => e.key === "Enter" && handleInitLogin()}
+            />
+          </div>
+          {error && <p className="text-error text-xs">{error}</p>}
+          <button
+            className="btn btn-primary btn-sm mt-2"
+            onClick={handleInitLogin}
+            disabled={!employeeCode || isLoading}
+          >
+            {isLoading ? (
+              <span className="loading loading-spinner loading-sm" />
+            ) : (
+              "Continue"
+            )}
+          </button>
+        </>
+      );
+    }
+
+    if (step === "qrSetup") {
+      return (
+        <>
+          <h2 className="font-bold text-lg">Set up Authenticator</h2>
+          <p className="text-sm opacity-50">
+            Scan this QR code with Google Authenticator or Microsoft
+            Authenticator, then enter the 6-digit code below.
+          </p>
+          <div className="flex justify-center">
+            <img
+              src={qrCode}
+              alt="TOTP QR Code"
+              className="rounded-lg w-48 h-48"
+            />
+          </div>
+          <div className="flex flex-col gap-1">
+            <span className="text-xs opacity-50">6-digit code</span>
+            <input
+              type="text"
+              placeholder="000000"
+              maxLength={6}
+              className="input input-bordered input-sm tracking-widest text-center text-lg"
+              value={code}
+              onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+              onKeyDown={(e) =>
+                e.key === "Enter" && code.length === 6 && handleVerify()
+              }
+            />
+          </div>
+          {error && <p className="text-error text-xs">{error}</p>}
+          <button
+            className="btn btn-primary btn-sm mt-2"
+            onClick={handleVerify}
+            disabled={code.length !== 6 || isLoading}
+          >
+            {isLoading ? (
+              <span className="loading loading-spinner loading-sm" />
+            ) : (
+              "Confirm & Sign in"
+            )}
+          </button>
+        </>
+      );
+    }
+
+    if (step === "totpCode") {
+      return (
+        <>
+          <h2 className="font-bold text-lg">Enter your code</h2>
+          <p className="text-sm opacity-50">
+            Open your authenticator app and enter the 6-digit code for Bolt TMS.
+          </p>
+          <div className="flex flex-col gap-1">
+            <span className="text-xs opacity-50">6-digit code</span>
+            <input
+              type="text"
+              placeholder="000000"
+              maxLength={6}
+              className="input input-bordered input-sm tracking-widest text-center text-lg"
+              value={code}
+              onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+              onKeyDown={(e) =>
+                e.key === "Enter" && code.length === 6 && handleVerify()
+              }
+              autoFocus
+            />
+          </div>
+          {error && <p className="text-error text-xs">{error}</p>}
+          <button
+            className="btn btn-primary btn-sm mt-2"
+            onClick={handleVerify}
+            disabled={code.length !== 6 || isLoading}
+          >
+            {isLoading ? (
+              <span className="loading loading-spinner loading-sm" />
+            ) : (
+              "Sign in"
+            )}
+          </button>
+          <button
+            className="btn btn-ghost btn-xs opacity-50"
+            onClick={() => {
+              setStep("employeeCode");
+              setCode("");
+              setError("");
+            }}
+          >
+            ← Back
+          </button>
+        </>
+      );
+    }
+  };
+
   return (
     <div className="min-h-screen bg-base-200 flex flex-col">
-      {/* Hero */}
       <div className="flex flex-col items-center justify-center flex-1 gap-6 px-6 py-24 text-center">
         <div className="flex items-center gap-3 mb-2">
           <BoltLogo className="w-12 h-12 text-primary" />
@@ -67,51 +218,11 @@ export const Landing = () => {
           manage, and grow their people.
         </p>
 
-        {/* Login Card */}
         <div className="bg-base-300 rounded-box p-8 w-full max-w-sm flex flex-col gap-4 mt-2">
-          <h2 className="font-bold text-lg">Sign in</h2>
-
-          <div className="flex flex-col gap-1">
-            <span className="text-xs opacity-50">Employee Code</span>
-            <input
-              type="text"
-              placeholder="EMP001"
-              className="input input-bordered input-sm"
-              value={employeeCode}
-              onChange={(e) => setEmployeeCode(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-            />
-          </div>
-
-          <div className="flex flex-col gap-1">
-            <span className="text-xs opacity-50">Password</span>
-            <input
-              type="password"
-              placeholder="••••••••"
-              className="input input-bordered input-sm"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-            />
-          </div>
-
-          {error && <p className="text-error text-xs">{error}</p>}
-
-          <button
-            className="btn btn-primary btn-sm mt-2"
-            onClick={handleLogin}
-            disabled={!employeeCode || !password || isLoading}
-          >
-            {isLoading ? (
-              <span className="loading loading-spinner loading-sm" />
-            ) : (
-              "Sign in"
-            )}
-          </button>
+          {renderCard()}
         </div>
       </div>
 
-      {/* Features */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-12 pb-24">
         {features.map((feature) => (
           <div

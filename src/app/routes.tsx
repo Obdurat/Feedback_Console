@@ -6,8 +6,6 @@ import { Landing } from "../pages/Landing";
 import { Dashboard } from "../pages/Dashboard";
 import { RequireAuth } from "../auth/RequireAuth";
 import { RedirectIfAuthenticated } from "../auth/RedirectIfAuthenticated";
-import { RequirePasswordChange } from "../auth/RequirePasswordChange";
-import { FirstLogin } from "../pages/FistLogin";
 
 export const AppRoutes = () => {
   return (
@@ -19,18 +17,13 @@ export const AppRoutes = () => {
         </Route>
 
         {/* First login — authenticated but password not changed yet */}
-        <Route element={<RequireAuth />}>
-          <Route path="/first-login" element={<FirstLogin />} />
-        </Route>
 
         {/* Protected — requires auth + password already changed */}
         <Route element={<RequireAuth />}>
-          <Route element={<RequirePasswordChange />}>
-            <Route element={<Sidebar />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/teams" element={<Teams />} />
-              <Route path="/calendar" element={<Shifts />} />
-            </Route>
+          <Route element={<Sidebar />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/teams" element={<Teams />} />
+            <Route path="/calendar" element={<Shifts />} />
           </Route>
         </Route>
       </Routes>

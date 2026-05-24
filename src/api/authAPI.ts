@@ -1,19 +1,12 @@
 import { api } from "../lib/api";
 
-export interface LoginPayload {
-  employeeCode: string;
-  password: string;
-}
-
-export const login = async (payload: LoginPayload) => {
-  const response = await api.post("/auth/login", payload);
+export const initLogin = async (employeeCode: string) => {
+  const response = await api.post("/auth/init", { employeeCode });
+  console.log("initLogin response:", response.data);
   return response.data;
 };
 
-export const changePassword = async (payload: {
-  newPassword: string;
-  confirmPassword: string;
-}) => {
-  const response = await api.post("/auth/change-password", payload);
+export const verifyTotp = async (memberId: string, code: string) => {
+  const response = await api.post("/auth/verify", { memberId, code });
   return response.data;
 };

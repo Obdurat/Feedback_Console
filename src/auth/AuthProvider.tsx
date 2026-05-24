@@ -5,7 +5,6 @@ interface User {
   name: string;
   employeeCode: string;
   role: { id: string; name: string };
-  firstLogin: boolean;
 }
 
 interface AuthContextType {
