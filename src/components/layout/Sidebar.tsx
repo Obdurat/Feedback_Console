@@ -1,10 +1,9 @@
 import { Outlet, NavLink } from "react-router-dom";
 import { BoltLogo } from "../../assets/icons/bolt";
-import { useMsal } from "@azure/msal-react";
+import { useAuth } from "../../auth/AuthProvider";
 
 const Sidebar = () => {
-  const { accounts } = useMsal();
-  const user = accounts[0];
+  const { user, logout } = useAuth();
 
   return (
     <div className="drawer lg:drawer-open">
@@ -51,13 +50,23 @@ const Sidebar = () => {
             {user ? (
               <>
                 <span className="text-sm opacity-70">{user.name}</span>
-                <div className="avatar">
-                  <div className="mask mask-circle h-10 w-10">
-                    <img
-                      src={`https://ui-avatars.com/api/?name=${user.name}`}
-                      alt={user.name}
-                    />
+                <div className="dropdown dropdown-end">
+                  <div className="avatar cursor-pointer" tabIndex={0}>
+                    <div className="mask mask-circle h-10 w-10">
+                      <img
+                        src={`https://ui-avatars.com/api/?name=${user.name}`}
+                        alt={user.name}
+                      />
+                    </div>
                   </div>
+                  <ul
+                    tabIndex={0}
+                    className="dropdown-content menu bg-base-300 rounded-box z-[1] w-40 p-2 shadow mt-2"
+                  >
+                    <li>
+                      <button onClick={logout}>Sign out</button>
+                    </li>
+                  </ul>
                 </div>
               </>
             ) : (

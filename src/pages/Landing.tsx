@@ -1,6 +1,8 @@
-import { useMsal } from "@azure/msal-react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BoltLogo } from "../assets/icons/bolt";
+import { login } from "../api/authAPI";
+import { useAuth } from "../auth/AuthProvider";
 
 const features = [
   {
@@ -24,20 +26,30 @@ const features = [
   {
     icon: "🔒",
     title: "Secure Access",
-    description: "Enterprise-grade authentication via Microsoft Azure AD.",
+    description: "Enterprise-grade authentication via JWT.",
   },
 ];
 
 export const Landing = () => {
-  const { instance } = useMsal();
+  const { login: setAuth } = useAuth();
   const navigate = useNavigate();
 
+  const [employeeCode, setEmployeeCode] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleLogin = async () => {
+    setError("");
+    setIsLoading(true);
     try {
-      await instance.loginPopup();
-      navigate("/teams");
-    } catch (error) {
-      console.error(error);
+      const { token, user } = await login({ employeeCode, password });
+      setAuth(token, user);
+      navigate("/dashboard");
+    } catch {
+      setError("Invalid employee code or password.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -55,9 +67,48 @@ export const Landing = () => {
           manage, and grow their people.
         </p>
 
-        <button className="btn btn-primary btn-lg mt-4" onClick={handleLogin}>
-          Sign in with Microsoft
-        </button>
+        {/* Login Card */}
+        <div className="bg-base-300 rounded-box p-8 w-full max-w-sm flex flex-col gap-4 mt-2">
+          <h2 className="font-bold text-lg">Sign in</h2>
+
+          <div className="flex flex-col gap-1">
+            <span className="text-xs opacity-50">Employee Code</span>
+            <input
+              type="text"
+              placeholder="EMP001"
+              className="input input-bordered input-sm"
+              value={employeeCode}
+              onChange={(e) => setEmployeeCode(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <span className="text-xs opacity-50">Password</span>
+            <input
+              type="password"
+              placeholder="••••••••"
+              className="input input-bordered input-sm"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+            />
+          </div>
+
+          {error && <p className="text-error text-xs">{error}</p>}
+
+          <button
+            className="btn btn-primary btn-sm mt-2"
+            onClick={handleLogin}
+            disabled={!employeeCode || !password || isLoading}
+          >
+            {isLoading ? (
+              <span className="loading loading-spinner loading-sm" />
+            ) : (
+              "Sign in"
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Features */}
@@ -74,7 +125,6 @@ export const Landing = () => {
         ))}
       </div>
 
-      {/* Footer */}
       <div className="text-center py-6 text-xs opacity-30 border-t border-base-300">
         © {new Date().getFullYear()} Bolt TMS — Internal use only
       </div>
