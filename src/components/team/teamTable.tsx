@@ -3,6 +3,8 @@ import type { FeedbackEntry, TeamMember } from "../../types/team.types";
 import { FeedbackModal, type FeedbackFormData } from "./FeedbackModal";
 import { FeedbackPreviewModal } from "./FeedbackPreviewModal";
 import { useCreateFeedback } from "../../hooks/useCreateFeedback";
+import { canGiveFeedbackTo } from "../../utils/hierarchy";
+import { useAuth } from "../../auth/AuthProvider";
 
 interface Props {
   members: TeamMember[];
@@ -62,6 +64,8 @@ export const TeamTable = ({ members }: Props) => {
     }
   };
 
+  const { user } = useAuth();
+
   useEffect(() => {
     const handleClickOutside = () => {
       setOpenDropdownId(null);
@@ -110,6 +114,12 @@ export const TeamTable = ({ members }: Props) => {
                     <button
                       role="button"
                       className="btn btn-ghost btn-sm"
+                      disabled={
+                        !canGiveFeedbackTo(
+                          user?.role?.name ?? "",
+                          member.role.name,
+                        )
+                      }
                       onClick={(e) => {
                         e.stopPropagation();
                         setOpenDropdownId((prev) =>
@@ -120,12 +130,21 @@ export const TeamTable = ({ members }: Props) => {
                       Feedbacks
                       <div
                         className={`badge ${
-                          member.receivedFeedbacks?.length
+                          member.receivedFeedbacks?.length &&
+                          canGiveFeedbackTo(
+                            user?.role?.name ?? "",
+                            member.role.name,
+                          )
                             ? "badge-primary"
                             : "badge-ghost"
                         }`}
                       >
-                        {member.receivedFeedbacks?.length ?? 0}
+                        {member.receivedFeedbacks?.filter(() =>
+                          canGiveFeedbackTo(
+                            user?.role?.name ?? "",
+                            member.role.name,
+                          ),
+                        ).length ?? 0}
                       </div>
                     </button>
 
@@ -240,6 +259,12 @@ export const TeamTable = ({ members }: Props) => {
                   <button
                     className="btn btn-primary btn-sm"
                     onClick={() => setSelectedMember(member)}
+                    disabled={
+                      !canGiveFeedbackTo(
+                        user?.role?.name ?? "",
+                        member.role.name,
+                      )
+                    }
                   >
                     New Feedback
                   </button>

@@ -5,10 +5,11 @@ import { Landing } from "../pages/Landing";
 import { Dashboard } from "../pages/Dashboard";
 import { MyFeedbacks } from "../pages/MyFeedbacks";
 import { RequireAuth } from "../auth/RequireAuth";
-import { RequireManagement, RequireAgent } from "../auth/RequireRole";
+import { RequireManagement } from "../auth/RequireRole";
 import { RedirectIfAuthenticated } from "../auth/RedirectIfAuthenticated";
 import { useSSE } from "../hooks/useSSE";
 import { useAuth } from "../auth/AuthProvider";
+import { ResetTotp } from "../pages/ResetTotp";
 
 const SSEProvider = () => {
   useSSE();
@@ -33,16 +34,15 @@ const AppWithSSE = () => {
             <Route element={<Sidebar />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/teams" element={<Teams />} />
+              <Route path="/reset-totp" element={<ResetTotp />} />
             </Route>
           </Route>
         </Route>
 
         {/* Agent only */}
         <Route element={<RequireAuth />}>
-          <Route element={<RequireAgent />}>
-            <Route element={<Sidebar />}>
-              <Route path="/my-feedbacks" element={<MyFeedbacks />} />
-            </Route>
+          <Route element={<Sidebar />}>
+            <Route path="/my-feedbacks" element={<MyFeedbacks />} />
           </Route>
         </Route>
       </Routes>

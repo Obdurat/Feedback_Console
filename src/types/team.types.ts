@@ -10,6 +10,8 @@ export interface SimpleTeamMember {
   id: string;
 
   name: string;
+
+  role: Role;
 }
 
 export interface FeedbackEntry {

@@ -39,6 +39,22 @@ const Sidebar = () => {
               >
                 Teams
               </NavLink>
+              <NavLink
+                to="/reset-totp"
+                className={({ isActive }) =>
+                  `btn btn-sm btn-ghost ${isActive ? "btn-active" : ""}`
+                }
+              >
+                Authenticator
+              </NavLink>
+              <NavLink
+                to="/my-feedbacks"
+                className={({ isActive }) =>
+                  `btn btn-sm btn-ghost ${isActive ? "btn-active" : ""}`
+                }
+              >
+                My Feedbacks
+              </NavLink>
             </>
           ) : (
             <NavLink

@@ -21,7 +21,12 @@ import type { FeedbackEntry } from "../types/team.types";
 
 import type { RecentFeedback, TopMemberEntry } from "../types/dashboard.types";
 
+import { useAuth } from "../auth/AuthProvider";
+import { canGiveFeedbackTo } from "../utils/hierarchy";
+
 export const Dashboard = () => {
+  const { user } = useAuth();
+
   const [selectedFeedback, setSelectedFeedback] =
     useState<FeedbackEntry | null>(null);
 
@@ -111,32 +116,38 @@ export const Dashboard = () => {
         <div className="bg-base-300 rounded-box p-5 flex flex-col gap-3">
           <h2 className="font-bold">Recent Feedbacks</h2>
           <div className="flex flex-col gap-2 overflow-y-auto max-h-72">
-            {recentFeedbacks?.map((fb: RecentFeedback) => (
-              <button
-                key={fb.id}
-                onClick={() =>
-                  setSelectedFeedback({ ...fb, memberId: fb.member.id })
-                }
-                className="bg-base-200 rounded-lg px-4 py-3 flex items-center justify-between gap-3 text-left hover:bg-base-100 transition"
-              >
-                <div className="flex flex-col gap-0.5">
-                  <span className="text-sm font-medium">{fb.member.name}</span>
-                  <span className="text-xs opacity-50">
-                    {fb.category} · by {fb.submittedBy.name}
-                  </span>
-                </div>
-                <div className="flex flex-col items-end gap-1">
-                  <span
-                    className={`badge badge-sm ${fb.type === "POSITIVE" ? "badge-success" : "badge-error"}`}
-                  >
-                    {fb.type}
-                  </span>
-                  <span className="text-xs opacity-40">
-                    {new Date(fb.createdAt).toLocaleDateString()}
-                  </span>
-                </div>
-              </button>
-            ))}
+            {recentFeedbacks
+              ?.filter((fb: RecentFeedback) =>
+                canGiveFeedbackTo(user?.role?.name ?? "", fb.member.role.name),
+              )
+              .map((fb: RecentFeedback) => (
+                <button
+                  key={fb.id}
+                  onClick={() =>
+                    setSelectedFeedback({ ...fb, memberId: fb.member.id })
+                  }
+                  className="bg-base-200 rounded-lg px-4 py-3 flex items-center justify-between gap-3 text-left hover:bg-base-100 transition"
+                >
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-sm font-medium">
+                      {fb.member.name}
+                    </span>
+                    <span className="text-xs opacity-50">
+                      {fb.category} · by {fb.submittedBy.name}
+                    </span>
+                  </div>
+                  <div className="flex flex-col items-end gap-1">
+                    <span
+                      className={`badge badge-sm ${fb.type === "POSITIVE" ? "badge-success" : "badge-error"}`}
+                    >
+                      {fb.type}
+                    </span>
+                    <span className="text-xs opacity-40">
+                      {new Date(fb.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
+                </button>
+              ))}
           </div>
         </div>
       </div>

@@ -13,12 +13,12 @@ export const RequireManagement = () => {
   return <Outlet />;
 };
 
-export const RequireAgent = () => {
-  const { user } = useAuth();
+// export const RequireAgent = () => {
+//   const { user } = useAuth();
 
-  if (MANAGEMENT_ROLES.includes(user?.role?.name ?? "")) {
-    return <Navigate to="/dashboard" replace />;
-  }
+//   if (MANAGEMENT_ROLES.includes(user?.role?.name ?? "")) {
+//     return <Navigate to="/dashboard" replace />;
+//   }
 
-  return <Outlet />;
-};
+//   return <Outlet />;
+// };

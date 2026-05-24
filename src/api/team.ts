@@ -21,3 +21,8 @@ export const getMyFeedbacks = async (): Promise<MyFeedbacksResponse> => {
   const response = await api.get(`/team-members/me/feedbacks`);
   return response.data;
 };
+
+export const resetMemberTotp = async (id: string) => {
+  const response = await api.post(`/team-members/${id}/reset-totp`);
+  return response.data;
+};
