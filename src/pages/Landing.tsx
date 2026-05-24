@@ -161,7 +161,8 @@ export const Landing = () => {
         <>
           <h2 className="font-bold text-lg">Enter your code</h2>
           <p className="text-sm opacity-50">
-            Open your authenticator app and enter the 6-digit code for Bolt TMS.
+            Open your authenticator app and enter the 6-digit code for Feedback
+            Console.
           </p>
           <div className="flex flex-col gap-1">
             <span className="text-xs opacity-50">6-digit code</span>
@@ -210,7 +211,9 @@ export const Landing = () => {
       <div className="flex flex-col items-center justify-center flex-1 gap-6 px-6 py-24 text-center">
         <div className="flex items-center gap-3 mb-2">
           <BoltLogo className="w-12 h-12 text-primary" />
-          <span className="text-4xl font-bold tracking-tight">BOLT TMS</span>
+          <span className="text-4xl font-bold tracking-tight">
+            Feedback Console
+          </span>
         </div>
 
         <p className="text-xl opacity-60 max-w-lg">
@@ -237,7 +240,7 @@ export const Landing = () => {
       </div>
 
       <div className="text-center py-6 text-xs opacity-30 border-t border-base-300">
-        © {new Date().getFullYear()} Bolt TMS — Internal use only
+        © {new Date().getFullYear()} Feedback Console — Internal use only
       </div>
     </div>
   );

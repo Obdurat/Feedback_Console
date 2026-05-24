@@ -17,7 +17,7 @@ const Sidebar = () => {
           {/* Logo */}
           <div className="flex items-center gap-2 font-semibold text-lg">
             <BoltLogo className="w-6 h-6 text-primary" />
-            <span>BOLT TMS</span>
+            <span>Feedback Console</span>
           </div>
 
           {/* Nav Links */}
