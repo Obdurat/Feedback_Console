@@ -43,6 +43,8 @@ export interface TeamMember {
 
   role: Role;
 
+  employeeCode: string;
+
   reportsTo: SimpleTeamMember | null;
 
   receivedFeedbacks: FeedbackEntry[];
