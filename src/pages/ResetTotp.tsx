@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTeamMembers } from "../hooks/useTeamMembers";
 import { useResetTotp } from "../hooks/useResetTotp";
 import type { TeamMember } from "../types/team.types";
+import { LoadingSpinner } from "../components/ui/LoadingSpinner";
 
 export const ResetTotp = () => {
   const { data: members, isLoading } = useTeamMembers({ limit: 100 });
@@ -33,7 +34,7 @@ export const ResetTotp = () => {
     }
   };
 
-  if (isLoading) return <progress className="progress w-56" />;
+  if (isLoading) return <LoadingSpinner />;
 
   return (
     <div className="flex flex-col gap-6">
