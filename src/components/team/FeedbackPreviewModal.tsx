@@ -27,6 +27,14 @@ export const FeedbackPreviewModal = ({ feedback, isOpen, onClose }: Props) => {
               </div>
 
               <div className="badge badge-outline">{feedback.category}</div>
+              <div className="badge badge-ghost">
+                {feedback.viewed ? "Viewed" : "New"}
+              </div>
+              <div className="badge badge-ghost">
+                {feedback.viewedAt
+                  ? `Viewed on ${new Date(feedback.viewedAt).toLocaleDateString()}`
+                  : "Not viewed yet"}
+              </div>
             </div>
 
             <div className="mt-2 text-sm opacity-70">

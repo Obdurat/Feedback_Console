@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Sidebar from "../components/layout/Sidebar";
-import Shifts from "../pages/Shifts";
 import { Teams } from "../pages/Teams";
 import { Landing } from "../pages/Landing";
 import { Dashboard } from "../pages/Dashboard";
@@ -8,10 +7,20 @@ import { MyFeedbacks } from "../pages/MyFeedbacks";
 import { RequireAuth } from "../auth/RequireAuth";
 import { RequireManagement, RequireAgent } from "../auth/RequireRole";
 import { RedirectIfAuthenticated } from "../auth/RedirectIfAuthenticated";
+import { useSSE } from "../hooks/useSSE";
+import { useAuth } from "../auth/AuthProvider";
 
-export const AppRoutes = () => {
+const SSEProvider = () => {
+  useSSE();
+  return null;
+};
+
+const AppWithSSE = () => {
+  const { isAuthenticated } = useAuth();
+
   return (
-    <BrowserRouter>
+    <>
+      {isAuthenticated && <SSEProvider />}
       <Routes>
         {/* Public */}
         <Route element={<RedirectIfAuthenticated />}>
@@ -24,7 +33,6 @@ export const AppRoutes = () => {
             <Route element={<Sidebar />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/teams" element={<Teams />} />
-              <Route path="/calendar" element={<Shifts />} />
             </Route>
           </Route>
         </Route>
@@ -38,6 +46,14 @@ export const AppRoutes = () => {
           </Route>
         </Route>
       </Routes>
+    </>
+  );
+};
+
+export const AppRoutes = () => {
+  return (
+    <BrowserRouter>
+      <AppWithSSE />
     </BrowserRouter>
   );
 };
