@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { TeamTable } from "../components/team/teamTable";
 import { useTeamMembers } from "../hooks/useTeamMembers";
+import { LoadingSpinner } from "../components/ui/LoadingSpinner";
 
 const LIMIT = 10;
 
@@ -64,7 +65,7 @@ export const Teams = () => {
 
   const hasActiveFilters = search || role || status || wave;
 
-  if (isLoading) return <progress className="progress w-56" />;
+  if (isLoading) return <LoadingSpinner />;
 
   return (
     <div className="flex flex-col gap-4">

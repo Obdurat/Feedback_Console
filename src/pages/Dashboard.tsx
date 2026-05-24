@@ -23,6 +23,7 @@ import type { RecentFeedback, TopMemberEntry } from "../types/dashboard.types";
 
 import { useAuth } from "../auth/AuthProvider";
 import { canGiveFeedbackTo } from "../utils/hierarchy";
+import { LoadingSpinner } from "../components/ui/LoadingSpinner";
 
 export const Dashboard = () => {
   const { user } = useAuth();
@@ -30,10 +31,21 @@ export const Dashboard = () => {
   const [selectedFeedback, setSelectedFeedback] =
     useState<FeedbackEntry | null>(null);
 
-  const { data: stats } = useDashboardStats();
-  const { data: byCategory } = useFeedbacksByCategory();
-  const { data: recentFeedbacks } = useRecentFeedbacks();
-  const { data: topMembers } = useTopMembers();
+  const { data: stats, isLoading: isStatsLoading } = useDashboardStats();
+  const { data: byCategory, isLoading: isByCategoryLoading } =
+    useFeedbacksByCategory();
+  const { data: recentFeedbacks, isLoading: isRecentFeedbacksLoading } =
+    useRecentFeedbacks();
+  const { data: topMembers, isLoading: isTopMembersLoading } = useTopMembers();
+
+  if (
+    isStatsLoading ||
+    isByCategoryLoading ||
+    isRecentFeedbacksLoading ||
+    isTopMembersLoading
+  ) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <div className="flex flex-col gap-6">

@@ -3,13 +3,14 @@ import { useMyFeedbacks } from "../hooks/useMyFeedbacks";
 import { FeedbackPreviewModal } from "../components/team/FeedbackPreviewModal";
 import type { FeedbackEntry } from "../types/team.types";
 import { setFeedbackVisibility } from "../api/feedbackAPI";
+import { LoadingSpinner } from "../components/ui/LoadingSpinner";
 
 export const MyFeedbacks = () => {
   const { data, isLoading } = useMyFeedbacks();
   const [selectedFeedback, setSelectedFeedback] =
     useState<FeedbackEntry | null>(null);
 
-  if (isLoading) return <progress className="progress w-56" />;
+  if (isLoading) return <LoadingSpinner />;
   if (!data) return null;
 
   const { member, stats } = data;
