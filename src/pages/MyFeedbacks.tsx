@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useMyFeedbacks } from "../hooks/useMyFeedbacks";
 import { FeedbackPreviewModal } from "../components/team/FeedbackPreviewModal";
 import type { FeedbackEntry } from "../types/team.types";
+import { setFeedbackVisibility } from "../api/feedbackAPI";
 
 export const MyFeedbacks = () => {
   const { data, isLoading } = useMyFeedbacks();
@@ -79,9 +80,11 @@ export const MyFeedbacks = () => {
             {member.receivedFeedbacks.map((fb) => (
               <button
                 key={fb.id}
-                onClick={() =>
-                  setSelectedFeedback({ ...fb, memberId: member.id })
-                }
+                onClick={() => {
+                  console.log("Selected feedback:", fb);
+                  setSelectedFeedback({ ...fb, memberId: member.id });
+                  setFeedbackVisibility(fb.id, fb.viewed);
+                }}
                 className="bg-base-200 rounded-lg px-4 py-3 flex items-center justify-between gap-3 text-left hover:bg-base-100 transition"
               >
                 <div className="flex flex-col gap-0.5">
@@ -99,6 +102,11 @@ export const MyFeedbacks = () => {
                   <span className="text-xs opacity-40">
                     {new Date(fb.createdAt).toLocaleDateString()}
                   </span>
+                  {fb.viewedAt && (
+                    <span className="text-xs opacity-40">
+                      Viewed on {new Date(fb.viewedAt).toLocaleDateString()}
+                    </span>
+                  )}
                 </div>
               </button>
             ))}

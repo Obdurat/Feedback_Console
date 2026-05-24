@@ -26,6 +26,10 @@ export interface FeedbackEntry {
   category: string;
 
   submittedBy: SimpleTeamMember;
+
+  viewed: boolean;
+
+  viewedAt: string | null;
 }
 
 export interface TeamMember {

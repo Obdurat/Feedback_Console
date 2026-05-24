@@ -24,6 +24,8 @@ export interface RecentFeedback {
   createdAt: string;
   member: SimpleTeamMember;
   submittedBy: SimpleTeamMember;
+  viewed: boolean;
+  viewedAt: string | null;
 }
 
 export interface TopMemberEntry {

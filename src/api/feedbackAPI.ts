@@ -11,3 +11,13 @@ export const createFeedback = async (payload: CreateFeedbackPayload) => {
 
   return response.data;
 };
+
+export const setFeedbackVisibility = async (
+  feedbackId: string,
+  viewed: boolean | undefined,
+) => {
+  if (viewed) return;
+  const response = await api.patch(`/feedbacks/${feedbackId}/viewed`);
+
+  return response.data;
+};
